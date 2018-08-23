@@ -1,2 +1,0 @@
-# UnlockPattern
-Created with CodeSandbox
