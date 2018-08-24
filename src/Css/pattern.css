@@ -1,4 +1,8 @@
-body {
+.screen1 {
   min-height: 100vh;
-  background: rgb(150, 150, 100);
+  background: rgb(150, 150, 98);
+}
+.screen2 {
+  min-height: 100vh;
+  background: rgb(70, 70, 54);
 }

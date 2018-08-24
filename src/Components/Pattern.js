@@ -1,93 +1,81 @@
 import React, { Component } from "react";
-import PatternLock from "react-pattern-lock";
 import "../Css/pattern.css";
+import PatternLock from "react-pattern-lock";
+import { connect } from "react-redux";
+import {
+  record,
+  checkTrue,
+  checkError
+} from "../ReduxComponents/patternActions";
+import Reset from "./Reset";
 
 class Pattern extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      loading: false,
-      done: false,
-      selectedPattern: []
-    };
-    this.recordPattern = this.recordPattern.bind(this);
-    this.checkPattern = this.checkPattern.bind(this);
-    this.reset = this.reset.bind(this);
-    this.renderText = this.renderText.bind(this);
-  }
-
-  recordPattern(pattern) {
+  recordPattern = pattern => {
     return new Promise((resolve, reject) => {
       if (pattern.length < 3) {
         reject();
       } else {
-        this.setState({ selectedPattern: pattern });
+        console.log(pattern);
+        this.props.dispatch(record(pattern));
         resolve();
       }
     });
-  }
-  checkPattern(pattern) {
-    this.setState({ isLoading: true });
+  };
+  checkPattern = pattern => {
+    /* this.setState({ isLoading: true }); */
     return new Promise((resolve, reject) => {
-      if (pattern.join("-") === this.state.selectedPattern.join("-")) {
+      if (
+        pattern.join("-") ===
+        this.props.PatternReducer.selectedPattern.join("-")
+      ) {
         resolve();
-        this.setState({ done: true });
+        this.props.dispatch(checkTrue());
       } else {
         reject();
-        this.setState({ error: true });
+        this.props.dispatch(checkError());
       }
     });
-  }
-  reset() {
-    this.setState({ done: false, error: false, selectedPattern: [] });
-  }
+  };
 
-  renderText() {
-    if (this.state.error) {
+  renderText = () => {
+    if (this.props.PatternReducer.error) {
       return <div style={{ color: "red" }}>Wrong Pattern</div>;
-    } else return <div>Draw your pattern</div>;
-  }
-
-  render() {
-    if (!this.state.selectedPattern.length)
+    } else
       return (
         <div>
-          Choose your pattern (you must connect 3 points at least)
+          <h2>Confirm your pattern</h2>
+        </div>
+      );
+  };
+
+  render() {
+    console.log("Checking Done Prop" + this.props.PatternReducer.done);
+    if (!this.props.PatternReducer.selectedPattern.length)
+      return (
+        <div className="screen1">
+          <h2>Choose your pattern</h2>
           <PatternLock
-            width={400}
+            width={300}
             pointSize={10}
-            pointActiveSize={40}
-            size={3}
-            onChange={this.recordPattern.bind(this)}
+            onChange={this.recordPattern}
           />
         </div>
       );
-    return this.state.done ? (
+    return this.props.PatternReducer.done ? (
       <div>
         <h1>Success</h1>
-        <h3>
-          Click{" "}
-          <span
-            style={{ color: "lightblue", cursor: "pointer" }}
-            onClick={this.reset.bind(this)}
-          >
-            here
-          </span>{" "}
-          to reset.
-        </h3>
+        <Reset />
       </div>
     ) : (
-      <div>
+      <div className="screen2">
         {this.renderText()}
-        <PatternLock
-          width={400}
-          size={3}
-          pointSize={10}
-          pointActiveSize={40}
-          onChange={this.checkPattern.bind(this)}
-        />
+        <PatternLock width={300} pointSize={10} onChange={this.checkPattern} />
+        <Reset />
       </div>
     );
   }
 }
-export default Pattern;
+const mapStateToProps = store => {
+  return store;
+};
+export default connect(mapStateToProps)(Pattern);
