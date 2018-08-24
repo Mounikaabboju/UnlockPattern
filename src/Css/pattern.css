@@ -4,7 +4,7 @@
 }
 .screen2 {
   min-height: 100vh;
-  background: rgb(70, 70, 54);
+  background: rgb(82, 82, 63);
 }
 .screen3 {
   background: rgb(70, 70, 54);
@@ -31,4 +31,7 @@ h2 {
   color: red;
   text-align: center;
   font-size: 150%;
+}
+.reset {
+  height: 70px;
 }

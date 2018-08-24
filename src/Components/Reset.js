@@ -8,7 +8,7 @@ class Reset extends Component {
   };
   render() {
     return (
-      <div>
+      <div className="reset">
         <h2>
           Click{" "}
           <span
