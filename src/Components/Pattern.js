@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import "../Css/pattern.css";
-import PatternLock from "react-pattern-lock";
 import { connect } from "react-redux";
 import {
   record,
@@ -8,10 +7,12 @@ import {
   checkError
 } from "../ReduxComponents/patternActions";
 import Reset from "./Reset";
+import PatternComponent from "./PatternComponent";
 
 class Pattern extends Component {
   recordPattern = pattern => {
     return new Promise((resolve, reject) => {
+      console.log("I am inside record patt");
       if (pattern.length < 3) {
         reject();
       } else {
@@ -22,54 +23,49 @@ class Pattern extends Component {
     });
   };
   checkPattern = pattern => {
-    /* this.setState({ isLoading: true }); */
     return new Promise((resolve, reject) => {
       if (
         pattern.join("-") ===
         this.props.PatternReducer.selectedPattern.join("-")
       ) {
-        resolve();
         this.props.dispatch(checkTrue());
+        resolve();
       } else {
-        reject();
         this.props.dispatch(checkError());
+        reject();
       }
     });
   };
 
   renderText = () => {
     if (this.props.PatternReducer.error) {
-      return <div style={{ color: "red" }}>Wrong Pattern</div>;
+      return <div className="error">Patterns don't match</div>;
     } else
       return (
         <div>
-          <h2>Confirm your pattern</h2>
+          <h2>Draw the pattern again to confirm it</h2>
         </div>
       );
   };
 
   render() {
-    console.log("Checking Done Prop" + this.props.PatternReducer.done);
+    //console.log("Checking Done Prop" + this.props.PatternReducer.done);
     if (!this.props.PatternReducer.selectedPattern.length)
       return (
         <div className="screen1">
-          <h2>Choose your pattern</h2>
-          <PatternLock
-            width={300}
-            pointSize={10}
-            onChange={this.recordPattern}
-          />
+          <h2 className="h2">Draw your unlock pattern</h2>
+          <PatternComponent onChange={this.recordPattern} />
         </div>
       );
     return this.props.PatternReducer.done ? (
-      <div>
+      <div className="screen3">
         <h1>Success</h1>
         <Reset />
       </div>
     ) : (
       <div className="screen2">
         {this.renderText()}
-        <PatternLock width={300} pointSize={10} onChange={this.checkPattern} />
+        <PatternComponent onChange={this.checkPattern} />
         <Reset />
       </div>
     );

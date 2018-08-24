@@ -9,7 +9,7 @@ class Reset extends Component {
   render() {
     return (
       <div>
-        <h3>
+        <h2>
           Click{" "}
           <span
             style={{ color: "lightblue", cursor: "pointer" }}
@@ -18,7 +18,7 @@ class Reset extends Component {
             here
           </span>{" "}
           to reset.
-        </h3>
+        </h2>
       </div>
     );
   }
